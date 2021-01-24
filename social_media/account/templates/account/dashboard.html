@@ -1,5 +1,15 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h4>{{ user }}</h4>
+<h4 class="text-center">{{ user|capfirst }}</h4>
+<p class="text-center">{{ user.profile.bio }}</p>
+<br><br><br>
+
+    {% for post in posts %}
+        <div class="card">
+            <p class="card-body">
+                <a href="{{ post.get_absolute_url }}">{{ post.body }}</a>
+            </p>
+        </div>
+    {% endfor %}
 {% endblock %}
