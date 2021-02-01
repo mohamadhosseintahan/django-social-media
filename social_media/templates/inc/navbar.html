@@ -6,6 +6,7 @@
         <a href=" {% url 'account:register' %}" class="nav-item nav-link active">Register</a>
         {% else %}
         <a href=" {% url 'account:logout' %}" class="nav-item nav-link active">Logout</a>
+        <a href=" {% url 'account:dashboard' request.user.id %}" class="nav-item nav-link active">Panel</a>
         {% endif %}
     </div>
 </nav>
