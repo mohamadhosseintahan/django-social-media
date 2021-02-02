@@ -5,6 +5,28 @@
 <a href="{% url 'posts:post_delete' post.user.id post.id %}">Delete post</a>
 <a href="{% url 'posts:post_edit' post.user.id post.id %}">Edit post</a>
 {% endif %}
-<p><a href="{% url 'account:dashboard' request.user.id %}">{{ post.user }} </a> | {{ post.created|date:'j/m/Y' }}</p>
+<p><a href="{% url 'account:dashboard' post.user.id %}">{{ post.user }} </a> | {{ post.created|date:'j/m/Y' }}</p>
 <p> {{ post.body }}</p>
+<hr>
+{% if request.user.is_authenticated %}
+<form method="post">
+    {% csrf_token %}
+    {{form.as_p}}
+    <input type="submit" class="btn btn-primary" value="Send">
+</form>
+{% else %}
+<p>login for sending comment <a href="{% url 'account:login' %}">Login</a></p>
+{% endif %}
+Comments : {{comments.count}}
+{% for comment in comments %}
+<div class="card bg-dark text-white">
+    <p class="card-header">{{ comment.user }}</p>
+    <p class="card-body">{{ comment.body }}</p>
+    {% for reply in comment.rcomment.all %}
+    <p class="bg-primary m-5 p-2 text-white">{{ reply.user }} <br> {{ reply.body }}</p>
+    {% endfor %}
+</div><br>
+{% empty %}
+<p>There is no comment</p>
+{% endfor %}
 {% endblock %}

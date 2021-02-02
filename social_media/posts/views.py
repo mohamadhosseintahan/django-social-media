@@ -4,7 +4,7 @@ from .forms import AddPostForm
 from django.contrib import messages
 from django.utils.text import slugify
 from django.contrib.auth.decorators import login_required
-from .forms import EditPostForm
+from .forms import EditPostForm, CommentForm
 
 
 # Create your views here.
@@ -16,14 +16,25 @@ def all_post(request):
 
 def post_detail(request, year, month, day, slug):
     post = get_object_or_404(Post, created__year=year, created__month=month, created__day=day, slug=slug)
-    comments = Comment.objects.filter(post=post)
-    return render(request, 'posts/post_detail.html', {'post': post})
+    comments = Comment.objects.filter(post=post, is_reply=False)
+    if request.method == "POST":
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            new_comment = form.save(commit=False)
+            new_comment.post = post
+            new_comment.user = request.user
+            new_comment.save()
+            form = CommentForm()
+    else:
+        form = CommentForm()
+    return render(request, 'posts/post_detail.html', {'post': post,
+                                                      'comments': comments,
+                                                      'form': form})
 
 
 @login_required
 def add_post(request, user_id):
     if user_id == request.user.id:
-
         if request.method == 'POST':
             form = AddPostForm(request.POST or None)
             if form.is_valid():
