@@ -2,8 +2,9 @@
 
 {% block content %}
 {% if request.user.is_authenticated and request.user.id == post.user.id %}
-<a href="{% url 'posts:post_delete' post.user.id post.id %}">delete post</a>
+<a href="{% url 'posts:post_delete' post.user.id post.id %}">Delete post</a>
+<a href="{% url 'posts:post_edit' post.user.id post.id %}">Edit post</a>
 {% endif %}
-<p><a href="{% url 'account:dashboard' request.user.id %}">{{ post.user }} </a>| {{ post.created|date:'j/m/Y' }}</p>
+<p><a href="{% url 'account:dashboard' request.user.id %}">{{ post.user }} </a> | {{ post.created|date:'j/m/Y' }}</p>
 <p> {{ post.body }}</p>
 {% endblock %}
